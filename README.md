@@ -69,15 +69,15 @@ This project is a web-based application that leverages AI to detect scam calls i
 
 **Home Page**:
 
-![Screenshot_4-1-2026_95859_technominds-five vercel app](https://github.com/user-attachments/assets/61d709a4-2ab5-4822-8865-2b2e4d6ffa20)
+![Screenshot_16-2-2026_15633_gfgbq-team-technominds-27dv vercel app](https://github.com/user-attachments/assets/3e5ac37e-8d6b-44e3-8133-47da63d89ad0)
 
 **History of Audio Detection**:
 
-![Screenshot_4-1-2026_10147_technominds-five vercel app](https://github.com/user-attachments/assets/1e9b5ec0-e99b-4e7a-8375-86b2d7e0972d)
+![Screenshot_16-2-2026_15652_gfgbq-team-technominds-27dv vercel app](https://github.com/user-attachments/assets/73be63e0-babd-4016-87c7-ca5e2fa3b4e3)
 
 **Scam Alert & Guidance**:
 
-![Screenshot_4-1-2026_1039_technominds-five vercel app](https://github.com/user-attachments/assets/07a41330-9d52-4f9b-bd0f-bd392e603d96)
+![Screenshot_16-2-2026_15740_gfgbq-team-technominds-27dv vercel app](https://github.com/user-attachments/assets/ddf2ad49-b4b5-4c0c-b9d6-e67afc33bf57)
 
 ## Technology Stack
 -  Frontend: HTML, CSS, JavaScript, TypeScript, Tailwind CSS
