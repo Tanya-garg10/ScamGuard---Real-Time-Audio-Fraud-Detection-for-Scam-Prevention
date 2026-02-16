@@ -11,11 +11,7 @@ Team TechnoMinds
 
 ## Deployed Link
 
-🔗 https://technominds-five.vercel.app/
-
-## Demonstration Video Link
-
-🎥 https://drive.google.com/file/d/1M-CerTNroK5QFsr20GZe81RwNSf6yA0-/view?usp=drive_link
+🔗 https://gfgbq-team-technominds-27dv.vercel.app/
 
 ## PPT Link
 
@@ -113,12 +109,6 @@ This project is a web-based application that leverages AI to detect scam calls i
 - Periodic analysis every 5 seconds during recording
 - Final comprehensive analysis when call ends
 - Context-aware scam pattern detection
-
-### Fixed Issues
-✅ Resolved issue where scam and normal calls showed identical output
-✅ Replaced random simulation with actual AI analysis
-✅ Improved accuracy with real conversation context
-✅ Added proper error handling for speech recognition
 
 ## 🧪 Testing the Scam Detection
 
