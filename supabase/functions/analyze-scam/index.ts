@@ -38,46 +38,75 @@ serve(async (req) => {
       );
     }
 
+    const text = transcript.toLowerCase().trim();
+
+    // Rule-based fallback when no API key - works without Lovable
     if (!LOVABLE_API_KEY) {
-      throw new Error('LOVABLE_API_KEY is not configured');
+      console.log('Using rule-based analysis (no LOVABLE_API_KEY)');
+      const patterns: { id: string; keywords: string[]; weight: number }[] = [
+        { id: 'impersonation', keywords: ['bank', 'bank se', 'from bank', 'rbi', 'government', 'police', 'tax department'], weight: 25 },
+        { id: 'otp_request', keywords: ['otp', 'share otp', 'otp batao', 'pin', 'cvv', 'password'], weight: 30 },
+        { id: 'urgency', keywords: ['immediately', 'urgent', 'account blocked', 'account will be blocked', 'act now'], weight: 25 },
+        { id: 'authority', keywords: ['arrest', 'police', 'legal', 'case', 'fine'], weight: 20 },
+        { id: 'money_request', keywords: ['transfer', 'upi', 'gift card', 'pay'], weight: 25 },
+      ];
+      const indicatorTypes = ['impersonation', 'urgency', 'emotional', 'authority', 'otp_request', 'money_request', 'voice_pattern'];
+      let riskScore = 0;
+      const indicators: ScamIndicator[] = indicatorTypes.map((type) => {
+        const pattern = patterns.find((p) => p.id === type);
+        const detected = pattern ? pattern.keywords.some((kw) => text.includes(kw)) : false;
+        if (detected && pattern) riskScore += pattern.weight;
+        return { id: type, type, detected, confidence: detected ? 0.85 : 0 };
+      });
+      riskScore = Math.min(100, riskScore);
+      const riskLevel = riskScore >= 50 ? 'high' : riskScore >= 25 ? 'medium' : 'low';
+      const result: AnalysisResult = {
+        riskLevel,
+        riskScore: riskLevel === 'high' ? Math.max(riskScore, 75) : riskScore,
+        indicators,
+        guidance: riskLevel === 'high' ? ['HIGH RISK - Do not share OTP. End call immediately.'] : riskLevel === 'medium' ? ['Be cautious. Verify caller identity.'] : ['Call appears safe.'],
+      };
+      return new Response(JSON.stringify(result), { headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
 
     console.log('Analyzing transcript:', transcript.substring(0, 200));
     console.log('Language:', language);
 
-    const systemPrompt = `You are an expert scam detection AI. Analyze the following phone conversation transcript and detect scam indicators.
+    const systemPrompt = `You are an expert scam detection AI for Indian phone scams. Analyze the transcript and detect scam indicators.
 
-Analyze for these specific scam patterns:
-1. impersonation - Caller claims to be from bank, government, police, or trusted organization
-2. urgency - Creating false urgency like "act now", "immediate action required", "your account will be blocked"
-3. emotional - Using fear, excitement, sympathy to manipulate (threats, prizes, emergencies)
-4. authority - Claiming legal authority, threatening arrest, legal action, or fines
-5. otp_request - Asking for OTP, PIN, CVV, password, or any sensitive codes
-6. money_request - Requesting money transfer, gift cards, UPI payment, or bank details
-7. voice_pattern - Scripted speech, background noise suggesting call center, multiple people coaching
+CRITICAL: These phrases ALWAYS indicate HIGH RISK (score 70-100):
+- "calling from bank/bank se call" + OTP/password request
+- "share your OTP/PIN/CVV" or "OTP batao/bhejo"
+- "account will be blocked/suspended" + urgency
+- Impersonating bank, police, government, tax department
+- "act immediately", "do it now", "urgent"
+
+Scam patterns to detect:
+1. impersonation - Claims to be from bank, government, police, RBI, tax dept
+2. urgency - "Act now", "immediate", "account will be blocked"
+3. emotional - Fear, threats, fake emergencies
+4. authority - Legal threats, arrest, fines
+5. otp_request - Asking for OTP, PIN, CVV, password, codes
+6. money_request - UPI, transfer, gift cards, bank details
+7. voice_pattern - Call center, scripted speech
 
 Respond ONLY with valid JSON in this exact format:
 {
   "riskLevel": "low" | "medium" | "high",
   "riskScore": 0-100,
   "indicators": [
-    {
-      "id": "impersonation",
-      "type": "impersonation",
-      "detected": true/false,
-      "confidence": 0.0-1.0,
-      "evidence": "brief quote or description from transcript"
-    }
+    {"id": "impersonation", "type": "impersonation", "detected": true, "confidence": 0.9, "evidence": "quote"},
+    {"id": "otp_request", "type": "otp_request", "detected": false, "confidence": 0, "evidence": ""}
   ],
-  "guidance": ["action item 1", "action item 2"]
+  "guidance": ["action 1", "action 2"]
 }
 
-Guidelines for scoring:
-- low (0-30): Normal conversation, no suspicious patterns
-- medium (31-60): Some suspicious patterns, proceed with caution
-- high (61-100): Multiple red flags, likely scam, end call immediately
+Scoring rules - BE STRICT:
+- high (70-100): Bank/authority claim + OTP/account block/urgency = SCAM. Use "high" and score 75-95.
+- medium (40-69): Suspicious but not clear scam
+- low (0-35): Normal chat, greetings, no red flags
 
-Provide guidance in the user's language (${language}). Be specific and actionable.`;
+Include ALL 7 indicator types. Use lowercase for riskLevel. Provide guidance in language: ${language}.`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -115,9 +144,13 @@ Provide guidance in the user's language (${language}). Be specific and actionabl
     }
 
     const aiResponse = await response.json();
-    const content = aiResponse.choices?.[0]?.message?.content;
+    const content = aiResponse.choices?.[0]?.message?.content || '';
     
-    console.log('AI response:', content);
+    if (!content || typeof content !== 'string') {
+      console.error('Empty or invalid AI response:', aiResponse);
+      throw new Error('AI did not return analysis');
+    }
+    console.log('AI response:', content.substring(0, 300));
 
     // Parse the JSON response
     let analysis: AnalysisResult;

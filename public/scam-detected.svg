@@ -1,0 +1,39 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="90" fill="#FEF2F2"/>
+  
+  <!-- Shield with X -->
+  <g transform="translate(60, 60)">
+    <path d="M40 0L72 12V40C72 64 52 76 40 82C28 76 8 64 8 40V12L40 0Z" 
+          fill="#EF4444" opacity="0.2"/>
+    <path d="M40 6L66 16V40C66 60 48 70 40 76C32 70 14 60 14 40V16L40 6Z" 
+          stroke="#EF4444" stroke-width="3" fill="none"/>
+    
+    <!-- X Mark -->
+    <path d="M30 30L50 50M50 30L30 50" stroke="#EF4444" stroke-width="4" 
+          stroke-linecap="round"/>
+  </g>
+  
+  <!-- Warning Triangles -->
+  <g transform="translate(140, 60)">
+    <path d="M0 20L10 0L20 20Z" stroke="#EF4444" stroke-width="2" fill="none"/>
+    <circle cx="10" cy="14" r="1.5" fill="#EF4444"/>
+    <line x1="10" y1="8" x2="10" y2="12" stroke="#EF4444" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+  
+  <g transform="translate(30, 130)">
+    <path d="M0 15L7 0L14 15Z" stroke="#EF4444" stroke-width="1.5" fill="none" opacity="0.6"/>
+    <circle cx="7" cy="11" r="1" fill="#EF4444" opacity="0.6"/>
+    <line x1="7" y1="6" x2="7" y2="9" stroke="#EF4444" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+  </g>
+  
+  <!-- Alert Particles -->
+  <circle cx="160" cy="120" r="3" fill="#EF4444" opacity="0.5"/>
+  <circle cx="50" cy="70" r="2" fill="#EF4444" opacity="0.4"/>
+  
+  <!-- Danger Glow -->
+  <circle cx="100" cy="100" r="70" stroke="#EF4444" stroke-width="2" 
+          opacity="0.3" fill="none">
+    <animate attributeName="opacity" values="0.3;0.5;0.3" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>

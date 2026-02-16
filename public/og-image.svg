@@ -1,0 +1,72 @@
+<svg width="1200" height="630" viewBox="0 0 1200 630" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Gradient -->
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F0FDFA;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#CCFBF1;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bgGradient)"/>
+  
+  <!-- Decorative Circles -->
+  <circle cx="100" cy="100" r="150" fill="#2D9B9B" opacity="0.05"/>
+  <circle cx="1100" cy="530" r="200" fill="#2D9B9B" opacity="0.05"/>
+  
+  <!-- Main Shield Icon -->
+  <g transform="translate(200, 150)">
+    <path d="M100 0L180 30V110C180 190 140 230 100 250C60 230 20 190 20 110V30L100 0Z" 
+          fill="#2D9B9B" opacity="0.1"/>
+    <path d="M100 15L165 40V110C165 180 130 215 100 235C70 215 35 180 35 110V40L100 15Z" 
+          stroke="#2D9B9B" stroke-width="6" fill="none"/>
+    <path d="M70 110L90 130L135 80" stroke="#2D9B9B" stroke-width="8" 
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <!-- Text Content -->
+  <text x="550" y="220" font-family="Arial, sans-serif" font-size="72" 
+        font-weight="bold" fill="#1F2937">
+    ScamGuard
+  </text>
+  
+  <text x="550" y="290" font-family="Arial, sans-serif" font-size="36" 
+        fill="#2D9B9B" font-weight="600">
+    Real-Time Audio Fraud Detection
+  </text>
+  
+  <text x="550" y="360" font-family="Arial, sans-serif" font-size="28" 
+        fill="#6B7280">
+    Protect yourself from scam calls with AI-powered
+  </text>
+  <text x="550" y="400" font-family="Arial, sans-serif" font-size="28" 
+        fill="#6B7280">
+    real-time analysis and instant warnings
+  </text>
+  
+  <!-- Features -->
+  <g transform="translate(550, 450)">
+    <!-- Feature 1 -->
+    <circle cx="0" cy="0" r="8" fill="#10B981"/>
+    <text x="25" y="8" font-family="Arial, sans-serif" font-size="22" fill="#374151">
+      Live Speech-to-Text Transcription
+    </text>
+    
+    <!-- Feature 2 -->
+    <circle cx="0" cy="50" r="8" fill="#10B981"/>
+    <text x="25" y="58" font-family="Arial, sans-serif" font-size="22" fill="#374151">
+      AI-Powered Scam Pattern Detection
+    </text>
+    
+    <!-- Feature 3 -->
+    <circle cx="0" cy="100" r="8" fill="#10B981"/>
+    <text x="25" y="108" font-family="Arial, sans-serif" font-size="22" fill="#374151">
+      Instant Risk Assessment & Warnings
+    </text>
+  </g>
+  
+  <!-- Bottom Badge -->
+  <rect x="500" y="580" width="200" height="40" rx="20" fill="#2D9B9B"/>
+  <text x="600" y="607" font-family="Arial, sans-serif" font-size="20" 
+        font-weight="bold" fill="white" text-anchor="middle">
+    🛡️ Stay Protected
+  </text>
+</svg>

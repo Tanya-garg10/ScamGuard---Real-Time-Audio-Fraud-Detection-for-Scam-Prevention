@@ -10,6 +10,7 @@ interface UseAudioRecorderReturn {
   resumeRecording: () => void;
   error: string | null;
   audioLevel: number;
+  transcript: string;
 }
 
 export const useAudioRecorder = (): UseAudioRecorderReturn => {
@@ -18,11 +19,15 @@ export const useAudioRecorder = (): UseAudioRecorderReturn => {
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [audioLevel, setAudioLevel] = useState(0);
+  const [transcript, setTranscript] = useState('');
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animationFrameRef = useRef<number | null>(null);
+  const recognitionRef = useRef<any>(null);
+  const isRecordingRef = useRef(false);
+  const isPausedRef = useRef(false);
 
   const updateAudioLevel = useCallback(() => {
     if (analyserRef.current) {
@@ -37,6 +42,8 @@ export const useAudioRecorder = (): UseAudioRecorderReturn => {
   const startRecording = useCallback(async () => {
     try {
       setError(null);
+      setTranscript('');
+
       const stream = await navigator.mediaDevices.getUserMedia({
         audio: {
           echoCancellation: true,
@@ -73,21 +80,92 @@ export const useAudioRecorder = (): UseAudioRecorderReturn => {
           cancelAnimationFrame(animationFrameRef.current);
         }
         setAudioLevel(0);
+
+        // Stop speech recognition
+        if (recognitionRef.current) {
+          recognitionRef.current.stop();
+        }
       };
 
       mediaRecorderRef.current = mediaRecorder;
-      mediaRecorder.start(100); // Collect data every 100ms
+      mediaRecorder.start(100);
+
+      // Start speech recognition
+      const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+      if (SpeechRecognition) {
+        const recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'en-US';
+
+        recognition.onresult = (event: any) => {
+          let interimTranscript = '';
+          let finalTranscript = '';
+
+          for (let i = event.resultIndex; i < event.results.length; i++) {
+            const transcript = event.results[i][0].transcript;
+            if (event.results[i].isFinal) {
+              finalTranscript += transcript + ' ';
+            } else {
+              interimTranscript += transcript;
+            }
+          }
+
+          setTranscript(prev => {
+            const updated = prev + finalTranscript;
+            return updated;
+          });
+        };
+
+        recognition.onerror = (event: any) => {
+          const err = event.error || 'unknown';
+          // Ignore benign errors: no-speech (silence), aborted (intentional stop)
+          if (err === 'no-speech' || err === 'aborted') return;
+
+          console.error('Speech recognition error:', err);
+          const messages: Record<string, string> = {
+            'not-allowed': 'Microphone permission denied. Please allow access.',
+            'audio-capture': 'No microphone found or microphone in use by another app.',
+            'network': 'Network required for speech recognition. Check your connection.',
+            'service-not-allowed': 'Speech recognition service blocked. Try a different browser.',
+            'language-not-supported': 'Speech language not supported. Try speaking in English.',
+          };
+          setError(messages[err] || 'Speech recognition error. Analysis may be limited.');
+        };
+
+        recognition.onend = () => {
+          // Auto-restart if still recording (use refs to avoid stale closure)
+          if (isRecordingRef.current && !isPausedRef.current) {
+            try {
+              recognition.start();
+            } catch (e) {
+              console.log('Recognition restart failed:', e);
+            }
+          }
+        };
+
+        recognitionRef.current = recognition;
+        recognition.start();
+      } else {
+        console.warn('Speech recognition not supported');
+        setError('Speech recognition not supported in this browser. Using basic analysis.');
+      }
+
       setIsRecording(true);
       setIsPaused(false);
+      isRecordingRef.current = true;
+      isPausedRef.current = false;
       updateAudioLevel();
     } catch (err) {
       setError('Could not access microphone. Please allow microphone access and try again.');
       console.error('Error accessing microphone:', err);
     }
-  }, [updateAudioLevel]);
+  }, [updateAudioLevel, isRecording, isPaused]);
 
   const stopRecording = useCallback(() => {
     if (mediaRecorderRef.current && isRecording) {
+      isRecordingRef.current = false;
+      isPausedRef.current = false;
       mediaRecorderRef.current.stop();
       setIsRecording(false);
       setIsPaused(false);
@@ -98,8 +176,12 @@ export const useAudioRecorder = (): UseAudioRecorderReturn => {
     if (mediaRecorderRef.current && isRecording && !isPaused) {
       mediaRecorderRef.current.pause();
       setIsPaused(true);
+      isPausedRef.current = true;
       if (animationFrameRef.current) {
         cancelAnimationFrame(animationFrameRef.current);
+      }
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
       }
     }
   }, [isRecording, isPaused]);
@@ -108,7 +190,15 @@ export const useAudioRecorder = (): UseAudioRecorderReturn => {
     if (mediaRecorderRef.current && isRecording && isPaused) {
       mediaRecorderRef.current.resume();
       setIsPaused(false);
+      isPausedRef.current = false;
       updateAudioLevel();
+      if (recognitionRef.current) {
+        try {
+          recognitionRef.current.start();
+        } catch (e) {
+          console.log('Recognition restart failed:', e);
+        }
+      }
     }
   }, [isRecording, isPaused, updateAudioLevel]);
 
@@ -122,5 +212,6 @@ export const useAudioRecorder = (): UseAudioRecorderReturn => {
     resumeRecording,
     error,
     audioLevel,
+    transcript,
   };
 };

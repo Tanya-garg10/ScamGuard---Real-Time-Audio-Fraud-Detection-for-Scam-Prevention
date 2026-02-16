@@ -23,12 +23,58 @@ const riskIcons = {
 export const CallHistory: React.FC<CallHistoryProps> = ({ calls }) => {
   if (calls.length === 0) {
     return (
-      <div className="rounded-2xl border-2 border-dashed border-border p-8 text-center">
-        <Phone className="mx-auto h-12 w-12 text-muted-foreground/50" />
-        <h3 className="mt-4 text-lg font-semibold">No Call History</h3>
-        <p className="mt-2 text-muted-foreground">
-          Your monitored calls will appear here
-        </p>
+      <div className="space-y-6">
+        <div className="rounded-2xl border-2 border-dashed border-border p-12 text-center">
+          <div className="mx-auto mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
+            <Phone className="h-10 w-10 text-primary/50" />
+          </div>
+          <h3 className="text-xl font-bold">No Call History Yet</h3>
+          <p className="mt-2 text-muted-foreground max-w-md mx-auto">
+            Your monitored calls will appear here. Start monitoring a call to see the analysis results and risk assessment.
+          </p>
+        </div>
+
+        {/* Example Preview */}
+        <div className="rounded-2xl border-2 border-border bg-card/50 p-6">
+          <h4 className="font-semibold mb-4 flex items-center gap-2">
+            <span>📊</span>
+            <span>What you'll see here</span>
+          </h4>
+          <div className="space-y-3">
+            {/* Example Low Risk */}
+            <div className="flex items-center gap-4 rounded-xl border-2 border-success/30 bg-success/5 p-4 opacity-60">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-success/20">
+                <Check className="h-6 w-6 text-success" />
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold text-success">LOW Risk Call</p>
+                <p className="text-sm text-muted-foreground">Date & Time</p>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-bold text-success">15%</p>
+                <p className="text-xs text-muted-foreground">Duration</p>
+              </div>
+            </div>
+
+            {/* Example High Risk */}
+            <div className="flex items-center gap-4 rounded-xl border-2 border-danger/30 bg-danger/5 p-4 opacity-60">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-danger/20">
+                <X className="h-6 w-6 text-danger" />
+              </div>
+              <div className="flex-1">
+                <p className="font-semibold text-danger">HIGH Risk Call</p>
+                <p className="text-sm text-muted-foreground">Date & Time</p>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-bold text-danger">85%</p>
+                <p className="text-xs text-muted-foreground">Duration</p>
+              </div>
+            </div>
+          </div>
+          <p className="mt-4 text-xs text-center text-muted-foreground italic">
+            These are example previews. Your actual call history will appear above.
+          </p>
+        </div>
       </div>
     );
   }

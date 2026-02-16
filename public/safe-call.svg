@@ -1,0 +1,28 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle -->
+  <circle cx="100" cy="100" r="90" fill="#ECFDF5"/>
+  
+  <!-- Shield with Check -->
+  <g transform="translate(60, 60)">
+    <path d="M40 0L72 12V40C72 64 52 76 40 82C28 76 8 64 8 40V12L40 0Z" 
+          fill="#10B981" opacity="0.2"/>
+    <path d="M40 6L66 16V40C66 60 48 70 40 76C32 70 14 60 14 40V16L40 6Z" 
+          stroke="#10B981" stroke-width="3" fill="none"/>
+    
+    <!-- Large Check Mark -->
+    <path d="M28 40L36 48L54 28" stroke="#10B981" stroke-width="4" 
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+  
+  <!-- Success Particles -->
+  <circle cx="50" cy="80" r="3" fill="#10B981" opacity="0.6"/>
+  <circle cx="150" cy="70" r="2" fill="#10B981" opacity="0.4"/>
+  <circle cx="160" cy="120" r="3" fill="#10B981" opacity="0.5"/>
+  <circle cx="40" cy="130" r="2" fill="#10B981" opacity="0.4"/>
+  
+  <!-- Glow Effect -->
+  <circle cx="100" cy="100" r="70" stroke="#10B981" stroke-width="2" 
+          opacity="0.2" fill="none"/>
+  <circle cx="100" cy="100" r="80" stroke="#10B981" stroke-width="1" 
+          opacity="0.1" fill="none"/>
+</svg>

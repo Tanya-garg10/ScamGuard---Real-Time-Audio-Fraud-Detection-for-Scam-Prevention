@@ -1,0 +1,17 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield Background -->
+  <path d="M32 4L54 12V30C54 46 42 56 32 60C22 56 10 46 10 30V12L32 4Z" 
+        fill="#2D9B9B"/>
+  
+  <!-- Inner Shield -->
+  <path d="M32 10L48 16V30C48 42 38 50 32 54C26 50 16 42 16 30V16L32 10Z" 
+        fill="white" opacity="0.2"/>
+  
+  <!-- Check Mark -->
+  <path d="M24 32L29 37L40 24" stroke="white" stroke-width="4" 
+        stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Glow Effect -->
+  <circle cx="32" cy="32" r="28" stroke="#2D9B9B" stroke-width="2" 
+          opacity="0.3" fill="none"/>
+</svg>
